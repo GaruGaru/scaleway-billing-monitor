@@ -1,0 +1,10 @@
+version: "3"
+services:
+
+  tao:
+      image: garugaru/tao
+      build:
+        context: ../
+        dockerfile: docker/Dockerfile.dev
+      environment:
+        - SCALEWAY_AUTH_TOKEN=000-000-000-000

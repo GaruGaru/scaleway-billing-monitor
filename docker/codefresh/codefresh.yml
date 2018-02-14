@@ -1,0 +1,30 @@
+version: '1.0'
+steps:
+
+  build_production_image:
+    title: Building Production Image
+    type: build
+    image_name: garugaru/scaleway-billing-monitor
+    working_directory: ${{main_clone}}
+    dockerfile: docker/Dockerfile.prod
+    tag: '${{CF_SHORT_REVISION}}'
+
+  push_image:
+    type: push
+    title: Image push
+    candidate: ${{build_production_image}}
+    tag: ${{CF_SHORT_REVISION}}
+    fail_fast: true
+
+  deploy_to_swarm:
+    image: codefresh/remote-docker:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - rdocker ${{RDOCKER_HOST}} docker stack deploy --compose-file docker/codefresh/docker-stack.yml ${{STACK_NAME}}
+      - rdocker ${{RDOCKER_HOST}} docker service update --force --image garugaru/scaleway-billing-monitor:${{CF_SHORT_REVISION}} ${{STACK_NAME}}_scaleway-billing-monitor
+    environment:
+      - SSH_KEY=${{SSH_KEY}}
+    when:
+      branch:
+        only:
+          - master
