@@ -1,0 +1,21 @@
+version: "3"
+services:
+
+  scaleway-billing-monitor:
+      image: garugaru/scaleway-billing-monitor
+      environment:
+        SCALEWAY_AUTH_TOKEN: ${SCALEWAY_AUTH_TOKEN}
+        STATSD_HOST: ${STATSD_HOST}
+        STATSD_PREFIX: ${STATSD_PREFIX}
+      networks:
+        - statsd
+      deploy:
+        mode: replicated
+        replicas: 1
+        restart_policy:
+          condition: on-failure
+
+
+networks:
+  statsd:
+    external: true
