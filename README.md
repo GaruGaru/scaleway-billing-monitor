@@ -8,7 +8,7 @@
 	  scaleway-billing-monitor:
 		  image: garugaru/scaleway-billing-monitor
 		  environment:
-			- STATSD_ADDRESS=127.0.0.1:8125
+			- STATSD_HOST=127.0.0.1:8125
 			- SCALEWAY_AUTH_TOKEN=xxxxxx-xxxx-xx-xxxxx
 		  deploy:
 			mode: replicated
